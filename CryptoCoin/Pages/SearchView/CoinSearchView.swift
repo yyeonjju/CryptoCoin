@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-class CoinSearchViewModel : ObservableObject {
-    @Published var searchKeyword : String = ""
-    @Published var searchResults : [SearchCoin]?
-    @Published var  likedItemIdList : [String] = []
-}
-
 struct CoinSearchView: View {
     @StateObject private var vm = CoinSearchViewModel()
     
@@ -31,9 +25,7 @@ struct CoinSearchView: View {
             .searchable(text: $vm.searchKeyword, prompt: "검색하세요")
             .autocorrectionDisabled(true)
             .onSubmit(of: .search) {
-                DispatchQueue.global().asyncAfter(deadline: .now()+1){
-                    vm.searchResults = searchCoinMockResult
-                }
+                vm.getSearchResult()
             }
             .navigationTitle("Search")
 //            .navigationBarTitleDisplayMode(.automatic)
@@ -64,7 +56,8 @@ extension CoinSearchView {
                 .frame(width: 40, height : 40 )
             
             VStack(alignment : .leading) {
-                Text(item.name)
+//                Text(item.name)
+                MultiColoredText(originalText: item.name, coloredSubstrings: [(vm.searchKeyword, .red)])
                     .font(.headline)
                 Text(item.symbol)
                     .font(.subheadline)
@@ -91,4 +84,35 @@ extension CoinSearchView {
 
 #Preview {
     CoinSearchView()
+}
+
+
+struct MultiColoredText: View {
+    var originalText: String
+    var coloredSubstrings: [(String, Color)]
+    
+    var body: some View {
+        var currentIndex = originalText.startIndex
+        var result: Text = Text("")
+        
+        for (substring, color) in coloredSubstrings {
+            if let range = originalText.range(of: substring, range: currentIndex ..< originalText.endIndex) {
+                let beforeRange = originalText[currentIndex ..< range.lowerBound]
+                let coloredText = originalText[range]
+                
+                result = result + Text(beforeRange)
+                    .foregroundColor(.black)
+                result = result + Text(coloredText)
+                    .foregroundColor(color)
+                
+                currentIndex = range.upperBound
+            }
+        }
+        
+        let remainingText = originalText[currentIndex...]
+        result = result + Text(remainingText)
+            .foregroundColor(.black)
+        
+        return result
+    }
 }
