@@ -9,13 +9,32 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        
+        
+        TabView {
+            
+            CoinChartDetailView(id: "bitcoin")
+                .tabItem {
+                    Image(systemName: "1.square.fill")
+                    Text("Trend")
+                }
+            
+            CoinSearchView()
+                .tabItem {
+                    Image(systemName: "2.square.fill")
+                    Text("Search")
+                }
+            
+            Text("Favorite")
+                .tabItem {
+                    Image(systemName: "3.square.fill")
+                    Text("Favorite")
+                }
+            
         }
-        .padding()
+        .font(.headline)
+        .tint(.purple)
+
     }
 }
 

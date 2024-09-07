@@ -38,6 +38,10 @@ extension NetworkManager {
         let router = Router.searchCoin(query: keyword)
         return fetch(model: SearchCoinResponse.self, fetchRouter: router)
     }
+    func coinMatketDetail (ids : [String]) -> AnyPublisher<[CoinMarketResponse], Error> {
+        let router = Router.coinMarketDetail(ids: ids)
+        return fetch(model: [CoinMarketResponse].self, fetchRouter: router)
+    }
 }
 
 

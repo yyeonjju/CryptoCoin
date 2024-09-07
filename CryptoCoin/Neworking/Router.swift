@@ -11,6 +11,7 @@ import Alamofire
 
 enum Router{
     case searchCoin(query : String)
+    case coinMarketDetail(ids : [String])
 }
 
 extension Router : TargetType {
@@ -22,12 +23,14 @@ extension Router : TargetType {
         switch self {
         case .searchCoin:
             return APIURL.searchCoin
+        case .coinMarketDetail :
+            return APIURL.coinMarketDetail
         }
     }
     
     var method: Alamofire.HTTPMethod {
         switch self {
-        case .searchCoin:
+        case .searchCoin, .coinMarketDetail:
             return .get
         }
     }
@@ -41,6 +44,18 @@ extension Router : TargetType {
         case .searchCoin(let query):
             return [
                 URLQueryItem(name: "query", value: query)
+            ]
+        case .coinMarketDetail(let ids):
+            print("❤️ids❤️", ids.joined(separator: ","))
+            return [
+                URLQueryItem(name: "ids", value: ids.joined(separator: ",")),
+                URLQueryItem(name: "sparkline", value: "true"),
+                
+                URLQueryItem(name: "vs_currency", value: "krw"),
+                URLQueryItem(name: "order", value: "market_cap_desc"),
+                URLQueryItem(name: "per_page", value: "100"),
+                URLQueryItem(name: "page", value: "1"),
+                URLQueryItem(name: "locale", value: "en"),
             ]
         }
     }
