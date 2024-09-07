@@ -13,7 +13,7 @@ struct ContentView: View {
         
         TabView {
             
-            CoinChartDetailView(id: "bitcoin")
+            Text("Trend")
                 .tabItem {
                     Image(systemName: "1.square.fill")
                     Text("Trend")
